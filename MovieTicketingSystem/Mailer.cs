@@ -14,9 +14,10 @@ namespace MovieTicketingSystem
         {
             using (var message = new MailMessage())
             {
-                message.From = new MailAddress("13840160900@163.com", "Movie Ticketing System");
+                message.From = new MailAddress("email address", "Movie Ticketing System");
 
                 message.To.Add(new MailAddress(ticket.Email, "To Name"));
+                //TODO: qrcode generator to make qrcodes
                 string strFilePath = @"c:\qrcode.png";
 
                 System.Net.Mail.Attachment attachment1 = new System.Net.Mail.Attachment(strFilePath);
@@ -32,11 +33,11 @@ namespace MovieTicketingSystem
                     "Booking Room : " + ticket.Playing.Room.RoomNo + Environment.NewLine +
                     "Seat : " + ticket.SeatNo + Environment.NewLine +
                 "< img src = cid:"+ cid + "/>";
-                using (var client = new SmtpClient("smtp.163.com"))
+                using (var client = new SmtpClient("smtp.xxx.com"))
                 {
                     client.DeliveryMethod = SmtpDeliveryMethod.Network;
                     client.Port = 25;
-                    client.Credentials = new NetworkCredential("13840160900@163.com", "091212Peng");
+                    client.Credentials = new NetworkCredential("email address", "password");
                     client.EnableSsl = true;
                     client.Send(message);
                     //Console.WriteLine(message.Body);
