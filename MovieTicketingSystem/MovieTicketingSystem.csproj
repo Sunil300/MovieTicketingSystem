@@ -1,0 +1,81 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <UserSecretsId>aspnet-MovieTicketingSystem-8598BF96-23DA-470E-AFF0-2E7833ECBF50</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Views\Seats\**" />
+    <Content Remove="Views\Seats\**" />
+    <EmbeddedResource Remove="Views\Seats\**" />
+    <None Remove="Views\Seats\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Data\Migrations\20190521031914_Poster.cs" />
+    <Compile Remove="Data\Migrations\20190521031914_Poster.Designer.cs" />
+    <Compile Remove="Migrations\20190522000125_initial.cs" />
+    <Compile Remove="Migrations\20190522000125_initial.Designer.cs" />
+    <Compile Remove="Migrations\20190522042333_initial.cs" />
+    <Compile Remove="Migrations\20190522042333_initial.Designer.cs" />
+    <Compile Remove="Migrations\20190522044447_initial.cs" />
+    <Compile Remove="Migrations\20190522044447_initial.Designer.cs" />
+    <Compile Remove="Migrations\20190522094429_initial.cs" />
+    <Compile Remove="Migrations\20190522094429_initial.Designer.cs" />
+    <Compile Remove="Migrations\20190522220415_initial.cs" />
+    <Compile Remove="Migrations\20190522220415_initial.Designer.cs" />
+    <Compile Remove="Migrations\20190522222422_initial.cs" />
+    <Compile Remove="Migrations\20190522222422_initial.Designer.cs" />
+    <Compile Remove="Migrations\20190522224213_initial.cs" />
+    <Compile Remove="Migrations\20190522224213_initial.Designer.cs" />
+    <Compile Remove="Migrations\20190522231023_initial.cs" />
+    <Compile Remove="Migrations\20190522231023_initial.Designer.cs" />
+    <Compile Remove="Migrations\20190525030531_initial.cs" />
+    <Compile Remove="Migrations\20190525030531_initial.Designer.cs" />
+    <Compile Remove="Migrations\20190525080157_initial.cs" />
+    <Compile Remove="Migrations\20190525080157_initial.Designer.cs" />
+    <Compile Remove="Migrations\20190527094258_initial.cs" />
+    <Compile Remove="Migrations\20190527094258_initial.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BarCode" Version="4.0.2.2" />
+    <PackageReference Include="bootstrap.less" Version="3.4.1" />
+    <PackageReference Include="Bootstrap.v3.Datetimepicker" Version="4.17.45" />
+    <PackageReference Include="CsvHelper" Version="12.1.3" />
+    <PackageReference Include="font-awesome" Version="4.7.0" />
+    <PackageReference Include="Lucene.Net" Version="3.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.7" PrivateAssets="All" />
+    <PackageReference Include="Selenium.Chrome.WebDriver" Version="74.0.0" />
+    <PackageReference Include="Selenium.Firefox.WebDriver" Version="0.24.0" />
+    <PackageReference Include="Selenium.Support" Version="3.141.0" />
+    <PackageReference Include="Selenium.WebDriver" Version="3.141.0" />
+    <PackageReference Include="System.Drawing.Common" Version="4.6.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Data\Migrations\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\lib\jquery-seat-chosen\js\common.js" />
+    <None Include="wwwroot\lib\jquery-seat-chosen\js\jquery.min.js" />
+    <None Include="wwwroot\seatindex.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Views\Movies\Search.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Playings\Create - 复制.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Playings\Details.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,49 @@
+﻿@model MovieTicketingSystem.Models.Playing
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit</h2>
+
+<h4>Playing</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="PlayingId" />
+            <div class="form-group">
+                <label asp-for="TimeSlotId" class="control-label"></label>
+                <select asp-for="TimeSlotId" class="form-control" asp-items="ViewBag.TimeSlotId"></select>
+                <span asp-validation-for="TimeSlotId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PlayingDate" class="control-label"></label>
+                <input asp-for="PlayingDate" class="form-control" />
+                <span asp-validation-for="PlayingDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MovieId" class="control-label"></label>
+                <select asp-for="MovieId" class="form-control" asp-items="ViewBag.MovieId"></select>
+                <span asp-validation-for="MovieId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RoomId" class="control-label"></label>
+                <select asp-for="RoomId" class="form-control" asp-items="ViewBag.RoomId"></select>
+                <span asp-validation-for="RoomId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index" class="btn btn-default">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

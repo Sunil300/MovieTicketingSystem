@@ -1,0 +1,47 @@
+﻿@model IEnumerable<MovieTicketingSystem.Models.TimeSlot>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Bulk" class="btn btn-default">Create New</a>
+</p>
+<form asp-controller="Movies" asp-action="Index">
+    <asp:FileUpload ID="FileUpload1" runat="server" />
+    <asp:Button ID="Button1" runat="server" Text="上传" OnClick="Button1_Click" />
+    <asp:Label ID="Label1" runat="server" Text="" Style="color: Red"></asp:Label>
+</form>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.TimeFrom)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TimeTo)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TimeFrom)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TimeTo)
+                </td>
+                <td>
+                    <a asp-action="Edit" class="btn btn-default" asp-route-id="@item.TimeSlotId">Edit</a>
+                    <a asp-action="Details" class="btn btn-default" asp-route-id="@item.TimeSlotId">Details</a>
+                    <a asp-action="Delete" class="btn btn-default" asp-route-id="@item.TimeSlotId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,54 @@
+﻿@model MovieTicketingSystem.Models.ViewModels.AutoPlayingsViewModel
+
+@{
+    ViewData["Title"] = "Auto Create";
+}
+
+<h2>Auto Create</h2>
+
+<h4>Playing</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AutoCreate">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <!--
+    <div class="form-group">
+        <label asp-for="TimeSlotId" class="control-label"></label>
+        <select asp-for="TimeSlotId" class="form-control" asp-items="ViewBag.TimeSlotId"></select>
+    </div>
+        -->
+            <div class="form-group">
+                <label for="start date" class="control-label">Start date</label>
+                <input asp-for="PlayingDateFrom" class="form-control" />
+                <span asp-validation-for="PlayingDateFrom" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="end date" class="control-label">End date</label>
+                <input asp-for="PlayingDateTo" class="form-control" />
+                <span asp-validation-for="PlayingDateTo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MovieIds" class="control-label"></label>
+                <select asp-for="MovieIds" class="form-control" asp-items="ViewBag.MovieId" multiple="multiple" size="10"></select>
+            </div>
+            <!--
+    <div class="form-group">
+        <label asp-for="RoomId" class="control-label"></label>
+        <select asp-for="RoomId" class ="form-control" asp-items="ViewBag.RoomId"></select>
+    </div>
+        -->
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index" class="btn btn-default">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

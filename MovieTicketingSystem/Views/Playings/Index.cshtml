@@ -1,0 +1,91 @@
+﻿@model MovieTicketingSystem.Models.ViewModels.PlayingsViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+<form asp-controller="Playings" asp-action="Index" class="form-inline pull-left">
+    <div class="form-group">
+        <input asp-for="SearchDate" class="form-control" placeholder="select date..." />
+        <span asp-validation-for="SearchDate" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Filter" class="btn btn-default" />
+    </div>
+
+    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+    {
+        <div class="form-group">
+            <a asp-action="Create" class="btn btn-default">Create New</a>
+        </div>
+        <div class="form-group">
+            <a asp-action="AutoCreate" class="btn btn-default">Auto Create</a>
+        </div>
+    }
+</form>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Playings[0].PlayingDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Playings[0].TimeSlot)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Playings[0].Movie)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Playings[0].Room)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Playings[0].Room.Comment)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Playings[0].Room.SeatAmount)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Playings)
+                {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PlayingDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TimeSlot.TimeFrom)
+                        <span> - </span>
+                        @Html.DisplayFor(modelItem => item.TimeSlot.TimeTo)
+                    </td>
+                    <td>
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                        {
+                            @Html.DisplayFor(modelItem => item.Movie.Title)
+                        }
+                        else
+                        {
+                            <a asp-action="Details" asp-route-id="@item.PlayingId">@Html.DisplayFor(modelItem => item.Movie.Title)</a>
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Room.RoomNo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Room.Comment)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Room.SeatAmount)
+                    </td>
+                    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                    {
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.PlayingId" class="btn btn-default">Edit</a> 
+                            <a asp-action="Delete" asp-route-id="@item.PlayingId" class="btn btn-default">Delete</a>
+                        </td>
+                    }
+                </tr>
+                }
+            </tbody>
+        </table>

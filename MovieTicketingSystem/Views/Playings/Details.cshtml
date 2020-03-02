@@ -1,0 +1,287 @@
+﻿@model MovieTicketingSystem.Models.ViewModels.PlayingSeatsViewModel
+@Html.AntiForgeryToken()
+<input type="hidden" id="__RequestVerificationToken" name="__RequestVerificationToken">
+@{
+    ViewData["Title"] = @Html.DisplayFor(model => model.Playing.Movie.Title);
+}
+<link href="/lib/seat-charts/jquerysctipttop.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="/lib/seat-charts/jquery.seat-charts.css">
+<link rel="stylesheet" type="text/css" href="/lib/seat-charts/seat.css">
+<div id="successMessage" class="alert alert-success alert-dismissable">
+    <button type="button" class="close" data-dismiss="alert"
+            aria-hidden="true">
+        &times;
+    </button>
+    Well done! You successfully book tickets. Please check your email.
+</div>
+<h2>@Html.DisplayFor(model => model.Playing.Movie.Title)</h2>
+
+<div>
+
+    <h4>Booking</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Playing.PlayingDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Playing.PlayingDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Playing.TimeSlot)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Playing.TimeSlot.TimeFrom)
+            <span> - </span>
+            @Html.DisplayFor(model => model.Playing.TimeSlot.TimeTo)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Playing.Room)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Playing.Room.RoomNo)
+        </dd>
+    </dl>
+    <div class="wrapper">
+        <div class="row">
+            <div id="seat-map" class="col-lg-5">
+                <div id="legend"></div>
+            </div>
+            <div class="booking-details col-lg-4">
+                <h2>Booking Details</h2>
+                <h3> Selected Seats (<span id="counter">0</span>):</h3>
+                <ul id="selected-seats"></ul>
+                Total: <b>$<span id="total">0</span></b>
+                <br />
+                <div class="form-group">
+                    <label for="CreditCardNo"> CreditCardNo : </label>
+                    <input id="CreditCardNo" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label for="Email">Email :  </label>
+                    <input id="Email" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label for="PhoneNumber">PhoneNumber : </label>
+                    <input id="PhoneNumber" class="form-control" />
+                </div>
+                <button id="confirm_btn" type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal">Checkout &raquo;</button>
+
+                <!-- Modal -->
+                <div id="myModal" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 id="modalMessage" class="modal-title">Confirm Information</h4>
+                            </div>
+                            <form asp-controller="Tickets" asp-action="Create">
+                                <div class="modal-body">
+                                    <input type="hidden" asp-for="PlayingId" />
+                                    <p>Title : <b>@Model.Playing.Movie.Title</b></p>
+                                    <p>Date : <b>@Model.Playing.PlayingDate</b></p>
+                                    <p>Time : <b>@Model.Playing.TimeSlot.TimeFrom</b></p>
+                                    <p>RoomNo : <b>@Model.Playing.Room.RoomNo</b></p>
+                                    <p>Seats : <b id="confirmSeats"></b></p>
+                                    <p>CreditCardNo : <b id="confirmCreditCardNo"></b></p>
+                                    <p>Email : <b id="confirmEmail"></b></p>
+                                    <p>PhoneNum : <b id="confirmPhoneNum"></b></p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button id="checkout_btn" type="button" class="btn btn-success" data-dismiss="modal">Submit</button>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--    -->
+
+<div>
+    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+    {
+        <a asp-action="Index" class="btn btn-default">Back to List</a>
+    }
+    else
+    {
+        <button class="btn btn-default" onclick="window.history.back();">Back to List</button>
+    }
+
+</div>
+<!-- Modal Start here-->
+<div class="modal fade bs-example-modal-sm" id="myPleaseWait" tabindex="-1"
+     role="dialog" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <span class="glyphicon glyphicon-time">
+                    </span>Please Wait
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div class="progress">
+                    <div class="progress-bar progress-bar-info
+                    progress-bar-striped active"
+                         style="width: 100%">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal ends Here -->
+<script src="/lib/seat-charts/jquery.seat-charts.js"></script>
+<script>
+
+    var firstSeatLabel = 1;
+    $("#successMessage").hide();
+    $(document).ready(function () {
+        var rows = @Model.Playing.Room.rows;
+        var columns = @Model.Playing.Room.columns;
+        var line="";
+        var map = new Array(rows);
+        for (j = 0; j < columns; j++) {
+            line = line +'e';
+        }
+        for (i = 0; i < rows; i++) {
+
+            map[i] = line;
+        }
+
+        var $cart = $('#selected-seats'),
+            $counter = $('#counter'),
+            $total = $('#total'),
+            sc = $('#seat-map').seatCharts({
+                map: map,
+                seats: {
+                    /*
+                    f: {
+                        price: 100,
+                        classes: 'first-class', //your custom CSS class
+                        category: 'First Class'
+                    },
+                    */
+                    e: {
+                        price: 40,
+                        classes: 'economy-class', //your custom CSS class
+                        category: 'Economy Class'
+                    }
+                },
+                naming: {
+                    top: false,
+                    getLabel: function (character, row, column) {
+                        return firstSeatLabel++;
+                    },
+                },
+                legend: {
+                    node: $('#legend'),
+                    items: [
+                        //['f', 'available', 'First Class'],
+                        ['e', 'available', 'Economy Class'],
+                        ['f', 'unavailable', 'Already Booked']
+                    ]
+                },
+                click: function () {
+                    if (this.status() == 'available') {
+                        //let's create a new <li> which we'll add to the cart items
+                        $('<li>' + this.data().category + ' Seat # ' + this.settings.label + ': <b>$' + this.data().price + '</b> <a href="#" class="cancel-cart-item">[cancel]</a></li>')
+                            .attr('id', 'cart-item-' + this.settings.id)
+                            .data('seatId', this.settings.id)
+                            .appendTo($cart);
+
+                        $counter.text(sc.find('selected').length + 1);
+                        $total.text(recalculateTotal(sc) + this.data().price);
+
+                        return 'selected';
+                    } else if (this.status() == 'selected') {
+                        $counter.text(sc.find('selected').length - 1);
+                        $total.text(recalculateTotal(sc) - this.data().price);
+                        $('#cart-item-' + this.settings.id).remove();
+                        return 'available';
+                    } else if (this.status() == 'unavailable') {
+                        return 'unavailable';
+                    } else {
+                        return this.style();
+                    }
+                }
+            });
+
+        //this will handle "[cancel]" link clicks
+        $('#selected-seats').on('click', '.cancel-cart-item', function () {
+            sc.get($(this).parents('li:first').data('seatId')).click();
+        });
+
+        var unavaliableSeats =
+        @(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Seats)));
+        //let's pretend some seats have already been booked
+        sc.get(unavaliableSeats).status('unavailable');
+
+        $("#confirm_btn").on('click', function () {
+            var allSeats = "";
+            var selectSeat = sc.find('selected').seatIds;
+            for (i = 0; i < selectSeat.length; i++) {
+                allSeats = allSeats + selectSeat[i] + " ";
+            }
+            $("#confirmSeats").html(allSeats);
+            $("#confirmCreditCardNo").html($("#CreditCardNo").val());
+            $("#confirmEmail").html($("#Email").val());
+            $("#confirmPhoneNum").html($("#PhoneNumber").val());
+            if ($("#confirmSeats").html() != "" && $("#confirmCreditCardNo").html() != "" &&
+                $("#confirmEmail").html() != "" && $("#confirmPhoneNum").html()) {
+                $("#modalMessage").html("Confirm Information").css("color", "black");
+                $("#checkout_btn").removeAttr("disabled");
+            } else {
+                $("#modalMessage").html("Please fill up all of information").css("color", "red");
+                $("#checkout_btn").attr("disabled", "disabled");
+            }
+
+        }); //function
+
+        $("#checkout_btn").on('click', function () {
+
+            $.ajax({
+                type: "post",
+                dataType: "json",
+                url: "/Tickets/Create",
+                beforeSend: function (xhr) {
+                    $('#myPleaseWait').modal('show');
+                    xhr.setRequestHeader("XSRF-TOKEN",
+                        $('input:hidden[name="__RequestVerificationToken"]').val());
+                },
+                data: {
+                    PlayingId: @Model.Playing.PlayingId,
+                    SeatNo: $("#confirmSeats").html(),
+                    PhoneNum: $("#confirmPhoneNum").html(),
+                    Email: $("#confirmEmail").html(),
+                    CreditCard: $("#confirmCreditCardNo").html()
+                },
+                complete: function (result) {
+                    $('#myPleaseWait').modal('hide');
+                    $("#successMessage").show();
+                    setTimeout('location.reload()', 3000);
+                }
+            });
+
+        }); //function
+
+    }); //ready
+
+    function recalculateTotal(sc) {
+        var total = 0;
+
+        //basically find every selected seat and sum its price
+        sc.find('selected').each(function () {
+            total += this.data().price;
+        });
+
+        return total;
+    }
+
+</script>
+

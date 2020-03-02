@@ -1,0 +1,92 @@
+﻿@model MovieTicketingSystem.Models.ViewModels.MovieKeywordViewModel
+
+@{
+    ViewData["Title"] = "Search Result";
+}
+
+<h2>Search Result</h2>
+<input type="hidden" id="highlightedWord" value="@Html.DisplayFor(model => model.KeyWord)" />
+<div id="searchTextTable">
+    <table class="table">
+        <thead>
+            <tr>
+                <th width="18%">
+                    @Html.DisplayNameFor(model => model.Movies[0].Title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Movies[0].Director)
+                </th>
+                <th width="20%">
+                    @Html.DisplayNameFor(model => model.Movies[0].Cast)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Movies[0].Length)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Movies[0].Genre)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Movies[0].Rating)
+                </th>
+                <th>
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Movies)
+        {
+            <tr>
+                <td width="18%">
+                    <a asp-action="Details" asp-route-id="@item.MovieId">@Html.DisplayFor(modelItem => item.Title)</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Director)
+                </td>
+                <td width="20%">
+                    @Html.DisplayFor(modelItem => item.Cast)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Length)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Genre.Name)
+                </td>
+                <td>
+                    <img src=@("/images/icon-" + item.Rating.Name + ".jpg") class="img-thumbnail" alt="@item.Rating.Name">
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.MovieId">
+                        <img src="@Html.DisplayFor(modelItem => item.Poster)" class="img-thumbnail" alt="@Html.DisplayFor(modelItem => item.Synopsis)" width="200">
+                    </a>
+                </td>
+                @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                {
+                <td width="15%">
+                    <a asp-action="Edit" asp-route-id="@item.MovieId" class="btn btn-default">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@item.MovieId" class="btn btn-default">Delete</a>
+                </td>
+                }
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+<!-- Modal Start here-->
+<script src="/lib/jquery.textSearch-1.0.js"></script>
+<script>
+    $(document).ready(function () {
+        var v = $("#highlightedWord").val();
+        var low = v.toLowerCase();
+        var upper = v.toUpperCase();
+        var firstUpper = UpperFirstLetter(low);
+            v = v + " " + low + " " + upper + " " + firstUpper;
+        $("#searchTextTable").textSearch(v);
+        return false;
+    });
+    function UpperFirstLetter(str) {
+        return str.replace(/\b\w+\b/g, function (word) {
+            return word.substring(0, 1).toUpperCase() + word.substring(1);
+        });
+    }
+</script>

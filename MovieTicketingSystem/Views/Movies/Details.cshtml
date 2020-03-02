@@ -1,0 +1,111 @@
+﻿@model MovieTicketingSystem.Models.Movie
+
+@{
+    ViewData["Title"] = @Html.DisplayFor(model => model.Title);
+}
+
+<h2>@Html.DisplayFor(model => model.Title)</h2>
+
+<div>
+    <h4>Movies <b>NOW SHOWING</b></h4>
+    <hr />
+    <div class="row">
+        <div class="col-sm-6">
+            <img src="@Html.DisplayFor(model => model.Poster)" class="img-responsive" alt="Cinque Terre" style="text-align:center;">
+        </div>
+        <div class="col-sm-6">
+            <div class="embed-responsive embed-responsive-16by9">
+                <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/@Html.DisplayFor(model => model.Preview)"></iframe>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-md-8">
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Director)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Director)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Cast)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Cast)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Length)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Length)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Genre)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Genre.Name)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Rating)
+                </dt>
+                <dd>
+                    <img src=@("/images/icon-" + Model.Rating.Name + ".jpg") class="img-thumbnail" alt="@Model.Rating.Name">
+                </dd>
+                <dt>
+                    Showing time
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Release) - @Html.DisplayFor(model => model.StopShowing)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Synopsis)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Synopsis)
+                </dd>
+                @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                {
+                    <dt>
+                        @Html.DisplayNameFor(model => model.IsOnCarousel)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.IsOnCarousel)
+                    </dd>
+                }
+            </dl>
+        </div>
+        <div class="col-md-4">
+            <h4><b>RELATED</b></h4>
+            <ul class="list-group">
+
+                <li class="list-group-item"><a>JOHN WICK: CHAPTER 3- PARABELLUM</a></li>
+                <li class="list-group-item"><a>POKEMON: DETECTIVE PIKACHU</a></li>
+                <li class="list-group-item"><a>AVENGERS: ENDGAME</a></li>
+                <li class="list-group-item">
+                    <span class="badge">NEW</span>
+                    <a>JOJO RABBIT</a>
+                </li>
+                <li class="list-group-item"><a>STAR WAR - THE RISE OF SKYWALKER</a></li>
+                <li class="list-group-item">
+                    <span class="badge">NEW</span>
+                    <a>RIDE LIKE A GIRL</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+
+</div>
+<div>
+    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+    {
+        <a asp-action="Edit" asp-route-id="@Model.MovieId" class="btn btn-default">Edit</a>
+    }
+    else
+    {
+        <a asp-area="" asp-controller="Playings" asp-action="Index" asp-route-id="@Model.MovieId" class="btn btn-default">Playings</a>
+    }
+    <a asp-action="Index" class="btn btn-default">Back to List</a>
+</div>

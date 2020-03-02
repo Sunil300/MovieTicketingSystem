@@ -1,0 +1,126 @@
+﻿@model MovieTicketingSystem.Models.ViewModels.MovieGenreViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+<form asp-controller="Movies" asp-action="Index" class="form-inline pull-left">
+    <div class="form-group">
+        <input asp-for="SearchDate" class="form-control" />
+        <span asp-validation-for="SearchDate" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <select asp-for="MovieGenre" asp-items="Model.Genres" class="form-control">
+            <option value="">All</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <input type="text" name="SearchString" placeholder="title..." class="form-control">
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Filter" class="btn btn-default" />
+    </div>
+    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+    {
+        <div class="form-group">
+            <a asp-action="Create" class="btn btn-default">Create New</a>
+        </div>
+        <div class="form-group">
+            <button id="confirm_btn" type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">Bulk Uploading &raquo;</button>
+        </div>
+    }
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th width="18%">
+                @Html.DisplayNameFor(model => model.Movies[0].Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Movies[0].Director)
+            </th>
+            <th width="20%">
+                @Html.DisplayNameFor(model => model.Movies[0].Cast)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Movies[0].Length)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Movies[0].Genre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Movies[0].Rating)
+            </th>
+            <th>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Movies)
+        {
+            <tr>
+                <td width="18%">
+                    <a asp-action="Details" asp-route-id="@item.MovieId">@Html.DisplayFor(modelItem => item.Title)</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Director)
+                </td>
+                <td width="20%">
+                    @Html.DisplayFor(modelItem => item.Cast)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Length)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Genre.Name)
+                </td>
+                <td>
+                    <img src=@("/images/icon-" + item.Rating.Name + ".jpg") class="img-thumbnail" alt="@item.Rating.Name">
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.MovieId">
+                        <img src="@Html.DisplayFor(modelItem => item.Poster)" class="img-thumbnail" alt="@Html.DisplayFor(modelItem => item.Synopsis)" width="200">
+                    </a>
+                </td>
+                @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                {
+                    <td width="15%">
+                        <a asp-action="Edit" asp-route-id="@item.MovieId" class="btn btn-default">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@item.MovieId" class="btn btn-default">Delete</a>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+<!-- Modal Start here-->
+<div class="modal fade bs-example-modal-sm" id="myModal" tabindex="-1"
+     role="dialog" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 id="modalMessage" class="modal-title">File Uploading</h4>
+            </div>
+            <div class="modal-body">
+                
+                <form enctype="multipart/form-data" method="post" asp-action="Upload" asp-controller="Movies">
+                    <dl>
+                        <dt>
+                            <label for="Choosing CSV file"></label>
+                        </dt>
+                        <dd>
+
+                            <input type="file" name="file" />
+
+                        </dd>
+                    </dl>
+                    <button type="submit">Upload File</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

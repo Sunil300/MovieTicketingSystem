@@ -1,0 +1,30 @@
+﻿@model MovieTicketingSystem.Models.TimeSlot
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>TimeSlot</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.TimeFrom)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TimeFrom)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.TimeTo)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TimeTo)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.TimeSlotId" class="btn btn-default">Edit</a> 
+    <a asp-action="Index" class="btn btn-default">Back to List</a>
+</div>
