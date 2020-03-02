@@ -1,4 +1,4 @@
-C# linguist-generated=true
+*.* linguist-language=C#
 ###############################################################################
 # Set default behavior to automatically normalize line endings. 
 ###############################################################################
